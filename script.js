@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    displayDefaultMovies();
     $('#search-form').on('submit', (e) => {
         e.preventDefault();
         searchAndDisplayMovies();
@@ -29,4 +30,25 @@ const searchAndDisplayMovies = () => {
             });
         });
         $('#search-input').val('');
+}
+
+const displayDefaultMovies = () => {
+    let mykey = config.MY_KEY;
+    let popularMovies = `https://api.themoviedb.org/3/movie/popular?api_key=${mykey}`
+
+    let displayPopular = $('<div></div>');
+    $(displayPopular).addClass('movie-display');
+    $(displayPopular).appendTo('.movie-search-results');
+    axios.get(popularMovies)
+        .then((res) => {
+            let results = res.data.results;
+            results.map((movie) => {
+                let showMovies = `    
+                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" data-movie-id=${movie.id}>
+                `;
+                if (movie.poster_path) {
+                    $(showMovies).appendTo(displayPopular);
+                }
+            })
+        })
 }
